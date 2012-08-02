@@ -1,6 +1,6 @@
 //
 //  DEEmbossedLabel.m
-//  DETweeter
+//  DEer
 //
 //  Copyright (c) 2011 Double Encore, Inc. All rights reserved.
 //

@@ -1,6 +1,6 @@
 //
-//  UIApplication+DETweetComposeViewController.h
-//  DETweeter
+//  UIDevice+DEComposeViewController.h
+//  DEer
 //
 //  Copyright (c) 2011 Double Encore, Inc. All rights reserved.
 //
@@ -18,8 +18,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIApplication (DETweetComposeViewController)
+@interface UIDevice (DEComposeViewController)
 
-+ (BOOL)isIOS5;
++ (BOOL)de_isIOS5;
++ (BOOL)de_isPad;
++ (BOOL)de_isPhone;
++ (BOOL)de_isRetinaDisplay;
 
 @end

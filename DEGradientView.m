@@ -1,6 +1,6 @@
 //
-//  DETweetGradientView.m
-//  DETweeter
+//  DEGradientView.m
+//  DEer
 //
 //  Copyright (c) 2011 Double Encore, Inc. All rights reserved.
 //
@@ -16,17 +16,17 @@
 //  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "DETweetGradientView.h"
+#import "DEGradientView.h"
 
 
-@interface DETweetGradientView ()
+@interface DEGradientView ()
 
 - (void)tweetGradientViewInit;
 
 @end
 
 
-@implementation DETweetGradientView
+@implementation DEGradientView
 
 @synthesize centerOffset = _centerOffset;
 

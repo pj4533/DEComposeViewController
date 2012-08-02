@@ -1,6 +1,6 @@
 //
-//  DETweetTextView.h
-//  DETweeter
+//  UIApplication+DEComposeViewController.m
+//  DEer
 //
 //  Copyright (c) 2011 Double Encore, Inc. All rights reserved.
 //
@@ -15,20 +15,14 @@
 //  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
 //  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-#import <UIKit/UIKit.h>
 
-@protocol DETweetTextViewDelegate;
+#import "UIApplication+DEComposeViewController.h"
 
-@interface DETweetTextView : UITextView
+@implementation UIApplication (DEComposeViewController)
 
-@property (nonatomic, copy) NSString *accountName;
-@property (nonatomic, readonly) CGRect fromButtonFrame;  // So the popover can be displayed from this rect.
-
-@end
-
-
-@protocol DETweetTextViewDelegate <NSObject>
-
-- (void)tweetTextViewAccountButtonWasTouched:(DETweetTextView *)tweetTextView;
++ (BOOL)isIOS5
+{
+    return (NSClassFromString(@"NSJSONSerialization") != nil);
+}
 
 @end

@@ -1,6 +1,6 @@
 //
-//  UIDevice+DETweetComposeViewController.m
-//  DETweeter
+//  UIDevice+DEComposeViewController.m
+//  DEer
 //
 //  Copyright (c) 2011 Double Encore, Inc. All rights reserved.
 //
@@ -16,10 +16,10 @@
 //  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "UIDevice+DETweetComposeViewController.h"
+#import "UIDevice+DEComposeViewController.h"
 
 
-@implementation UIDevice (DETweetComposeViewController)
+@implementation UIDevice (DEComposeViewController)
 
 + (BOOL)de_isIOS5
 {

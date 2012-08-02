@@ -1,6 +1,6 @@
 //
-//  DETweetSheetCardView.h
-//  DETweeter
+//  DESheetCardView.h
+//  DEer
 //
 //  Copyright (c) 2011 Double Encore, Inc. All rights reserved.
 //
@@ -17,6 +17,6 @@
 //
 #import <UIKit/UIKit.h>
 
-@interface DETweetSheetCardView : UIView
+@interface DESheetCardView : UIView
 
 @end

@@ -1,6 +1,6 @@
 //
-//  DETweetSheetCardView.m
-//  DETweeter
+//  DESheetCardView.m
+//  DEer
 //
 //  Copyright (c) 2011 Double Encore, Inc. All rights reserved.
 //
@@ -16,11 +16,11 @@
 //  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "DETweetSheetCardView.h"
+#import "DESheetCardView.h"
 #import <QuartzCore/QuartzCore.h>
 
 
-@interface DETweetSheetCardView ()
+@interface DESheetCardView ()
 
 @property (nonatomic, retain) UIView *backgroundView;
 
@@ -29,7 +29,7 @@
 @end
 
 
-@implementation DETweetSheetCardView
+@implementation DESheetCardView
 
 @synthesize backgroundView = _backgroundView;
 
@@ -74,7 +74,7 @@
     self.backgroundView = [[[UIView alloc] initWithFrame:self.bounds] autorelease];
     self.backgroundView.layer.masksToBounds = YES;
     self.backgroundView.layer.cornerRadius = self.layer.cornerRadius + 1.0f;
-    self.backgroundView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"DETweetCardBackground"]];
+    self.backgroundView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"DECardBackground"]];
     self.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self insertSubview:self.backgroundView atIndex:0];
 }

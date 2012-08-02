@@ -1,6 +1,6 @@
 //
-//  DETweetTextView.m
-//  DETweeter
+//  DETextView.m
+//  DEer
 //
 //  Copyright (c) 2011 Double Encore, Inc. All rights reserved.
 //
@@ -16,12 +16,12 @@
 //  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "DETweetTextView.h"
+#import "DETextView.h"
 #import "DERuledView.h"
-#import "UIDevice+DETweetComposeViewController.h"
+#import "UIDevice+DEComposeViewController.h"
 
 
-@interface DETweetTextView ()
+@interface DETextView ()
 
 @property (nonatomic, retain) DERuledView *ruledView;
 @property (nonatomic, retain) UIButton *fromButton;
@@ -35,7 +35,7 @@
 @end
 
 
-@implementation DETweetTextView
+@implementation DETextView
 
     // Public
 @synthesize accountName = _accountName;
@@ -181,7 +181,7 @@
             self.accountButton.titleLabel.font = [UIFont systemFontOfSize:17.0f];
             [self addSubview:self.accountButton];
             
-            self.accountLine = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"DETweetCardAccountLine"]] autorelease];
+            self.accountLine = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"DECardAccountLine"]] autorelease];
             [self addSubview:self.accountLine];
         }
         [self.accountButton setTitle:self.accountName forState:UIControlStateNormal];

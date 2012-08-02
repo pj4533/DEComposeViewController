@@ -1,6 +1,6 @@
     //
-    //  DETweetComposeViewController.m
-    //  DETweeter
+    //  DEComposeViewController.m
+    //  DEer
     //
     //  Copyright (c) 2011-2012 Double Encore, Inc. All rights reserved.
     //
@@ -16,14 +16,14 @@
     //  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     //
 
-#import "DETweetComposeViewController.h"
-#import "DETweetSheetCardView.h"
-#import "DETweetTextView.h"
-#import "DETweetGradientView.h"
-#import "UIDevice+DETweetComposeViewController.h"
+#import "DEComposeViewController.h"
+#import "DESheetCardView.h"
+#import "DETextView.h"
+#import "DEGradientView.h"
+#import "UIDevice+DEComposeViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface DETweetComposeViewController ()
+@interface DEComposeViewController ()
 
 @property (nonatomic, copy) NSString *text;
 @property (nonatomic, retain) NSMutableArray *images;
@@ -33,7 +33,7 @@
 @property (nonatomic) UIStatusBarStyle previousStatusBarStyle;
 @property (nonatomic, assign) UIViewController *fromViewController;
 @property (nonatomic, retain) UIImageView *backgroundImageView;
-@property (nonatomic, retain) DETweetGradientView *gradientView;
+@property (nonatomic, retain) DEGradientView *gradientView;
 @property (nonatomic, retain) UIPickerView *accountPickerView;
 @property (nonatomic, retain) UIPopoverController *accountPickerPopoverController;
 @property (nonatomic, retain) id twitterAccount;  // iOS 5 use only.
@@ -48,7 +48,7 @@
 @end
 
 
-@implementation DETweetComposeViewController
+@implementation DEComposeViewController
 
     // IBOutlets
 @synthesize cardView = _cardView;
@@ -86,13 +86,13 @@
 @synthesize twitterAccount = _twitterAccount;
 
 enum {
-    DETweetComposeViewControllerNoAccountsAlert = 1,
-    DETweetComposeViewControllerCannotSendAlert
+    DEComposeViewControllerNoAccountsAlert = 1,
+    DEComposeViewControllerCannotSendAlert
 };
 
-NSInteger const DETweetURLLength = 20;  // https://dev.twitter.com/docs/tco-url-wrapper
-NSInteger const DETweetMaxImages = 1;  // We'll get this dynamically later, but not today.
-static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdentifier";
+NSInteger const DEURLLength = 20;  // https://dev.twitter.com/docs/tco-url-wrapper
+NSInteger const DEMaxImages = 1;  // We'll get this dynamically later, but not today.
+static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
 
 #define degreesToRadians(x) (M_PI * x / 180.0f)
 
@@ -281,7 +281,7 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
     [self.view insertSubview:self.backgroundImageView atIndex:0];
     
         // Now let's fade in a gradient view over the presenting view.
-    self.gradientView = [[[DETweetGradientView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.bounds] autorelease];
+    self.gradientView = [[[DEGradientView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.bounds] autorelease];
     self.gradientView.autoresizingMask = UIViewAutoresizingNone;
     self.gradientView.transform = self.fromViewController.view.transform;
     self.gradientView.alpha = 0.0f;
@@ -431,7 +431,7 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
         return NO;
     }
     
-    if ([self.images count] >= DETweetMaxImages) {
+    if ([self.images count] >= DEMaxImages) {
         return NO;
     }
     
@@ -510,8 +510,8 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
             cardTop = 25.0f;
             cardHeight = 189.0f;
             buttonTop = 7.0f;
-            cancelButtonImage = [[UIImage imageNamed:@"DETweetCancelButtonPortrait"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
-            sendButtonImage = [[UIImage imageNamed:@"DETweetSendButtonPortrait"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
+            cancelButtonImage = [[UIImage imageNamed:@"DECancelButtonPortrait"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
+            sendButtonImage = [[UIImage imageNamed:@"DESendButtonPortrait"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
             cardHeaderLineTop = 41.0f;
             titleLabelFontSize = 20.0f;
             titleLabelTop = 9.0f;
@@ -520,8 +520,8 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
             cardTop = -1.0f;
             cardHeight = 150.0f;
             buttonTop = 6.0f;
-            cancelButtonImage = [[UIImage imageNamed:@"DETweetCancelButtonLandscape"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
-            sendButtonImage = [[UIImage imageNamed:@"DETweetSendButtonLandscape"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
+            cancelButtonImage = [[UIImage imageNamed:@"DECancelButtonLandscape"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
+            sendButtonImage = [[UIImage imageNamed:@"DESendButtonLandscape"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
             cardHeaderLineTop = 32.0f;
             titleLabelFontSize = 17.0f;
             titleLabelTop = 5.0f;
@@ -531,8 +531,8 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
         cardWidth = 543.0f;
         cardHeight = 189.0f;
         buttonTop = 7.0f;
-        cancelButtonImage = [[UIImage imageNamed:@"DETweetCancelButtonPortrait"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
-        sendButtonImage = [[UIImage imageNamed:@"DETweetSendButtonPortrait"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
+        cancelButtonImage = [[UIImage imageNamed:@"DECancelButtonPortrait"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
+        sendButtonImage = [[UIImage imageNamed:@"DESendButtonPortrait"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
         cardHeaderLineTop = 41.0f;
         titleLabelFontSize = 20.0f;
         titleLabelTop = 9.0f;
@@ -626,7 +626,7 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
         // Create a array of attachment images to display.
     NSMutableArray *attachmentImages = [NSMutableArray arrayWithArray:self.images];
     for (NSInteger index = 0; index < [self.urls count]; index++) {
-        [attachmentImages addObject:[UIImage imageNamed:@"DETweetURLAttachment"]];
+        [attachmentImages addObject:[UIImage imageNamed:@"DEURLAttachment"]];
     }
     
     self.paperClipView.hidden = YES;
@@ -660,9 +660,9 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
 }
 
 
-#pragma mark - DETweetTextViewDelegate
+#pragma mark - DETextViewDelegate
 
-- (void)tweetTextViewAccountButtonWasTouched:(DETweetTextView *)tweetTextView
+- (void)tweetTextViewAccountButtonWasTouched:(DETextView *)tweetTextView
 {
 }
 
@@ -675,9 +675,9 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
     
     if (self.completionHandler) {
         if ([self.images count])
-            self.completionHandler(DETweetComposeViewControllerResultDone, self.textView.text, [self.images objectAtIndex:0]);
+            self.completionHandler(DEComposeViewControllerResultDone, self.textView.text, [self.images objectAtIndex:0]);
         else
-            self.completionHandler(DETweetComposeViewControllerResultDone, self.textView.text, nil);
+            self.completionHandler(DEComposeViewControllerResultDone, self.textView.text, nil);
     }
     else {
         [self dismissModalViewControllerAnimated:YES];
@@ -688,7 +688,7 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
 - (IBAction)cancel
 {
     if (self.completionHandler) {
-        self.completionHandler(DETweetComposeViewControllerResultCancelled, @"", nil);
+        self.completionHandler(DEComposeViewControllerResultCancelled, @"", nil);
     }
     else {
         [self dismissModalViewControllerAnimated:YES];
@@ -708,10 +708,10 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
     // This gets called if there's an error sending the tweet.
 {
-    if (alertView.tag == DETweetComposeViewControllerNoAccountsAlert) {
+    if (alertView.tag == DEComposeViewControllerNoAccountsAlert) {
         [self dismissModalViewControllerAnimated:YES];
     }
-    else if (alertView.tag == DETweetComposeViewControllerCannotSendAlert) {
+    else if (alertView.tag == DEComposeViewControllerCannotSendAlert) {
         if (buttonIndex == 1) {
                 // The user wants to try again.
             [self send];
