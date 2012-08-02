@@ -1,6 +1,36 @@
 DEComposeViewController
 =======================
 
-A generic message view controller using the style of iOS compose view controllers.
+A generic message entry view controller using the style of iOS compose view controllers (like tweet sheets).
 
 Based on the excellent tweet sheet based control [DETweetComposeViewController](https://github.com/doubleencore/DETweetComposeViewController) from DoubleEncore.
+
+![](https://github.com/downloads/pj4533/DEComposeViewController/DEComposeViewController.png)
+
+
+Example Usage
+=============
+
+
+    DEComposeViewControllerCompletionHandler completionHandler = ^(DEComposeViewControllerResult result, NSString* message, UIImage* image) {
+      switch (result) {
+        case DEComposeViewControllerResultCancelled:
+          NSLog(@"Note Result: Cancelled");
+          break;
+        case DEComposeViewControllerResultDone:
+          NSLog(@"Note Result: Done");
+          break;
+      }
+      [self dismissModalViewControllerAnimated:YES];
+    };
+    
+    DEComposeViewController *composeVC = [[DEComposeViewController alloc] init];
+    self.modalPresentationStyle = UIModalPresentationCurrentContext;
+    
+    // add an image to the sheet
+    [composeVC addImage:image];
+    
+    composeVC.completionHandler = completionHandler;
+    [self presentModalViewController:composeVC animated:YES];
+
+
