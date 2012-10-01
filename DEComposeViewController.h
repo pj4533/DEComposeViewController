@@ -16,20 +16,15 @@
 //  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <UIKit/UIKit.h>
-#import <CoreLocation/CoreLocation.h>
-
 @class DESheetCardView;
 @class DETextView;
 
-@interface DEComposeViewController : UIViewController <UITextViewDelegate, UIAlertViewDelegate, UIPopoverControllerDelegate, CLLocationManagerDelegate>
+@interface DEComposeViewController : UIViewController <UITextViewDelegate, UIAlertViewDelegate, UIPopoverControllerDelegate>
 
 @property (retain, nonatomic) IBOutlet DESheetCardView *cardView;
 @property (retain, nonatomic) IBOutlet UILabel *titleLabel;
-@property (retain, nonatomic) IBOutlet UILabel *locationLabel;
 @property (retain, nonatomic) IBOutlet UIButton *cancelButton;
 @property (retain, nonatomic) IBOutlet UIButton *sendButton;
-@property (retain, nonatomic) IBOutlet UIButton *locButton;
 @property (retain, nonatomic) IBOutlet UIView *cardHeaderLineView;
 @property (retain, nonatomic) IBOutlet DETextView *textView;
 @property (retain, nonatomic) IBOutlet UIView *textViewContainer;
@@ -41,15 +36,9 @@
 @property (retain, nonatomic) IBOutlet UIImageView *attachment2ImageView;
 @property (retain, nonatomic) IBOutlet UIImageView *attachment3ImageView;
 @property (retain, nonatomic) IBOutlet UILabel *characterCountLabel;
-@property (retain, nonatomic) CLLocationManager *locationManager;
-@property (retain, nonatomic) CLLocation *bestEffortAtLocation;
-@property (retain, nonatomic) NSString *stateString;
-
-
 
 - (IBAction)send;
 - (IBAction)cancel;
-- (IBAction)toggleLocButtonImage:(id)sender;
 
 enum DEComposeViewControllerResult {
     DEComposeViewControllerResultCancelled,
@@ -59,12 +48,6 @@ typedef enum DEComposeViewControllerResult DEComposeViewControllerResult;
 
     // Completion handler for DEComposeViewController
 typedef void (^DEComposeViewControllerCompletionHandler)(DEComposeViewControllerResult result, NSString* message, UIImage* image); 
-
-    //start updating coordinates
-- (void)startUpdatingLocation;
-
-    // stop updating coordinates.
-- (void)stopUpdatingLocation:(NSString *)state;
 
     // Sets the initial text to be tweeted. Returns NO if the specified text will
     // not fit within the character space currently available, or if the sheet
