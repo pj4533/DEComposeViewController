@@ -5,7 +5,7 @@ A generic message entry view controller using the style of iOS compose view cont
 
 Based on the excellent tweet sheet based control [DETweetComposeViewController](https://github.com/doubleencore/DETweetComposeViewController) from DoubleEncore.
 
-![](https://github.com/downloads/pj4533/DEComposeViewController/DEComposeViewController.png)
+![](http://cloud.github.com/downloads/Fanghao/DEComposeViewController/photo.PNG)
 
 
 Example Usage
