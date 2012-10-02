@@ -22,6 +22,9 @@
 #import "DEGradientView.h"
 #import "UIDevice+DEComposeViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import <CoreLocation/CoreLocation.h>
+
+
 
 @interface DEComposeViewController ()
 
@@ -53,8 +56,10 @@
     // IBOutlets
 @synthesize cardView = _cardView;
 @synthesize titleLabel = _titleLabel;
+@synthesize locationLabel = _locationLabel;
 @synthesize cancelButton = _cancelButton;
 @synthesize sendButton = _sendButton;
+@synthesize locButton = _locButton;
 @synthesize cardHeaderLineView = _cardHeaderLineView;
 @synthesize textView = _textView;
 @synthesize textViewContainer = _textViewContainer;
@@ -84,6 +89,12 @@
 @synthesize accountPickerView = _accountPickerView;
 @synthesize accountPickerPopoverController = _accountPickerPopoverController;
 @synthesize twitterAccount = _twitterAccount;
+@synthesize locationManager = _locationManager;
+@synthesize bestEffortAtLocation = _bestEffortAtLocation;
+@synthesize stateString = _stateString;
+@synthesize latString = _latString;
+@synthesize lonString = _lonString;
+@synthesize showCoordinates = _showCoordinates;
 
 enum {
     DEComposeViewControllerNoAccountsAlert = 1,
@@ -181,8 +192,10 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
         // IBOutlets
     [_cardView release], _cardView = nil;
     [_titleLabel release], _titleLabel = nil;
+    [_locationLabel release], _locationLabel = nil;
     [_cancelButton release], _cancelButton = nil;
     [_sendButton release], _sendButton = nil;
+    [_locButton release], _locButton = nil;
     [_cardHeaderLineView release], _cardHeaderLineView = nil;
     [_textView release], _textView = nil;
     [_textViewContainer release], _textViewContainer = nil;
@@ -206,6 +219,11 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
     [_attachmentImageViews release], _attachmentImageViews = nil;
     [_backgroundImageView release], _backgroundImageView = nil;
     [_gradientView release], _gradientView = nil;
+    [_locationManager release], _locationManager = nil;
+    [_bestEffortAtLocation release], _bestEffortAtLocation = nil;
+    [_stateString release], _stateString = nil;
+    [_latString release], _latString = nil;
+    [_lonString release], _lonString = nil;
     
     [super dealloc];
 }
@@ -258,6 +276,13 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
     [self.textView becomeFirstResponder];
     
     [self updateAttachments];
+    
+    self.latString = nil;
+    self.lonString = nil;
+    
+    // default to add current location
+    self.locationManager = [[CLLocationManager alloc] init];
+    [self startUpdatingLocation];
 }
 
 
@@ -381,8 +406,10 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
         // IBOutlets
     self.cardView = nil;
     self.titleLabel = nil;
+    self.locationLabel = nil;
     self.cancelButton = nil;
     self.sendButton = nil;
+    self.locButton = nil;
     self.cardHeaderLineView = nil;
     self.textView = nil;
     self.textViewContainer = nil;
@@ -401,10 +428,67 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
     self.gradientView = nil;
     self.accountPickerView = nil;
     self.accountPickerPopoverController = nil;
+    self.locationManager = nil;
+    self.bestEffortAtLocation = nil;
+    self.stateString = nil;
+    self.latString = nil;
+    self.lonString = nil;
     
     [super viewDidUnload];
 }
 
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    if (self.bestEffortAtLocation == nil || self.bestEffortAtLocation.horizontalAccuracy > newLocation.horizontalAccuracy) {
+        self.bestEffortAtLocation = newLocation;
+    }
+    NSString *textLatString = (self.bestEffortAtLocation.coordinate.latitude < 0) ? NSLocalizedString(@"S", @"S") : NSLocalizedString(@"N", @"N");
+    NSString *textLonString = (self.bestEffortAtLocation.coordinate.longitude < 0) ? NSLocalizedString(@"W", @"W") : NSLocalizedString(@"E", @"E");
+    NSString *coordinateString = [NSString stringWithFormat:@"%g\u00B0 %@, %g\u00B0 %@",fabs(newLocation.coordinate.latitude), textLatString, fabs(newLocation.coordinate.longitude), textLonString];
+    //check if meet the requirement
+    if (newLocation.horizontalAccuracy <= self.locationManager.desiredAccuracy) {
+        [self stopUpdatingLocation:NSLocalizedString(@"Acquired Location", @"Acquired Location")];
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(stopUpdatingLocation:) object:nil];
+    }
+    if (self.showCoordinates)
+        self.locationLabel.text = coordinateString;
+    
+    self.latString = [NSString stringWithFormat:@"%f", self.bestEffortAtLocation.coordinate.latitude];
+    self.lonString = [NSString stringWithFormat:@"%f", self.bestEffortAtLocation.coordinate.longitude];
+}
+
+-(void)startUpdatingLocation {    
+    self.locationManager.delegate = self;
+    self.locationManager.distanceFilter = kCLDistanceFilterNone;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
+    [self.locationManager startUpdatingLocation];
+    
+    [self performSelector:@selector(stopUpdatingLocation:) withObject:@"Timed Out" afterDelay:20.0f];
+}
+
+- (void)stopUpdatingLocation:(NSString *)state {
+    self.stateString = state;
+    [self.locationManager stopUpdatingLocation];
+    self.locationManager.delegate = nil;
+    NSLog(@"stop updating %@", state);
+    
+//    if ([state isEqualToString:@"Timed Out"]) {
+//        if ([self.locButton isSelected])
+//            [self.locButton setSelected:NO];
+//        else
+//            [self.locButton setSelected:YES];
+//        [self toggleLocButtonImage:self.locButton];
+//        NSLog(@"in");
+//    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    // The location "unknown" error simply means the manager is currently unable to get the location.
+    // We can ignore this error for the scenario of getting a single location fix, because we already have a
+    // timeout that will stop the location manager to save power.
+    if ([error code] != kCLErrorLocationUnknown) {
+        [self stopUpdatingLocation:NSLocalizedString(@"Error", @"Error")];
+    }
+}
 
 #pragma mark - Public
 
@@ -504,6 +588,9 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
     CGFloat titleLabelFontSize, titleLabelTop;
     CGFloat characterCountLeft, characterCountTop;
     
+    UIImage *locOnButtonImage = [[UIImage imageNamed:@"location_arrow_on"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
+    UIImage *locOffButtonImage = [[UIImage imageNamed:@"location_arrow_off"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
+    
     if ([UIDevice de_isPhone]) {
         cardWidth = CGRectGetWidth(self.view.bounds) - 10.0f;
         if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
@@ -555,6 +642,13 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
     
     [self.sendButton setBackgroundImage:sendButtonImage forState:UIControlStateNormal];
     self.sendButton.frame = CGRectMake(self.cardView.bounds.size.width - buttonHorizontalMargin - self.sendButton.frame.size.width, buttonTop, self.sendButton.frame.size.width, sendButtonImage.size.height);
+    
+    if (kCLAuthorizationStatusAuthorized != [CLLocationManager authorizationStatus]) {
+        [self.locButton setImage:locOffButtonImage forState:UIControlStateNormal];
+    }
+    else {
+        [self.locButton setImage:locOnButtonImage forState:UIControlStateNormal];
+    }
     
     self.cardHeaderLineView.frame = CGRectMake(0.0f, cardHeaderLineTop, self.cardView.bounds.size.width, self.cardHeaderLineView.frame.size.height);
     
@@ -675,9 +769,9 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
     
     if (self.completionHandler) {
         if ([self.images count])
-            self.completionHandler(DEComposeViewControllerResultDone, self.textView.text, [self.images objectAtIndex:0]);
+            self.completionHandler(DEComposeViewControllerResultDone, self.textView.text, [self.images objectAtIndex:0], self.latString, self.lonString);
         else
-            self.completionHandler(DEComposeViewControllerResultDone, self.textView.text, nil);
+            self.completionHandler(DEComposeViewControllerResultDone, self.textView.text, nil, self.latString, self.lonString);
     }
     else {
         [self dismissModalViewControllerAnimated:YES];
@@ -688,13 +782,58 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
 - (IBAction)cancel
 {
     if (self.completionHandler) {
-        self.completionHandler(DEComposeViewControllerResultCancelled, @"", nil);
+        self.completionHandler(DEComposeViewControllerResultCancelled, @"", nil, nil, nil);
     }
     else {
         [self dismissModalViewControllerAnimated:YES];
     }
 }
 
+
+- (IBAction)toggleLocButtonImage:(id)sender
+{    
+    UIImage *locOnButtonImage = [[UIImage imageNamed:@"location_arrow_on"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
+    UIImage *locOffButtonImage = [[UIImage imageNamed:@"location_arrow_off"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
+
+    // default is adding current location
+    
+    if (kCLAuthorizationStatusAuthorized == [CLLocationManager authorizationStatus]) {
+        if ([sender isSelected]) {
+            [sender setImage:locOnButtonImage forState:UIControlStateNormal];
+            [sender setSelected:NO];
+            [self startUpdatingLocation];
+        }
+        else {
+            [sender setImage:locOffButtonImage forState:UIControlStateSelected];
+            [sender setSelected:YES];
+            [self stopUpdatingLocation:NSLocalizedString(@"ManuallyStop", @"ManuallyStop")];
+            self.locationLabel.text = nil;
+            self.latString = nil;
+            self.lonString = nil;
+        }
+    }
+    
+    else {
+        if ([sender isSelected]) {
+            [sender setImage:locOffButtonImage forState:UIControlStateNormal];
+            [sender setSelected:NO];
+            self.locationLabel.text = nil;
+            self.latString = nil;
+            self.lonString = nil;
+        }
+        else {
+            UIAlertView *servicesDisabledAlert = [[UIAlertView alloc] initWithTitle:@"Location Services Disabled"
+                                                                            message:[NSString stringWithFormat:@"Please turn on the location services in the settings to add current location"]
+                                                                           delegate:nil
+                                                                  cancelButtonTitle:@"OK"
+                                                                  otherButtonTitles:nil];
+            [servicesDisabledAlert show];
+            self.locationLabel.text = nil;
+            self.latString = nil;
+            self.lonString = nil;
+        }
+    }
+}
 
 #pragma mark - UIAlertViewDelegate
 
