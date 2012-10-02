@@ -46,7 +46,7 @@
 @property (retain, nonatomic) NSString *stateString;
 @property (retain, nonatomic) NSString *latString;
 @property (retain, nonatomic) NSString *lonString;
-
+@property BOOL showCoordinates;
 
 
 - (IBAction)send;

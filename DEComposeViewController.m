@@ -94,6 +94,7 @@
 @synthesize stateString = _stateString;
 @synthesize latString = _latString;
 @synthesize lonString = _lonString;
+@synthesize showCoordinates = _showCoordinates;
 
 enum {
     DEComposeViewControllerNoAccountsAlert = 1,
@@ -103,9 +104,6 @@ enum {
 NSInteger const DEURLLength = 20;  // https://dev.twitter.com/docs/tco-url-wrapper
 NSInteger const DEMaxImages = 1;  // We'll get this dynamically later, but not today.
 static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
-
-// whether to display coordinates string
-bool showCoordinates = FALSE;
 
 #define degreesToRadians(x) (M_PI * x / 180.0f)
 
@@ -451,7 +449,7 @@ bool showCoordinates = FALSE;
         [self stopUpdatingLocation:NSLocalizedString(@"Acquired Location", @"Acquired Location")];
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(stopUpdatingLocation:) object:nil];
     }
-    if (showCoordinates)
+    if (self.showCoordinates)
         self.locationLabel.text = coordinateString;
     
     self.latString = [NSString stringWithFormat:@"%f", self.bestEffortAtLocation.coordinate.latitude];
