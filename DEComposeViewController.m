@@ -354,6 +354,10 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
                      }];
     
     [[UIApplication sharedApplication] setStatusBarStyle:self.previousStatusBarStyle animated:YES];
+    
+    if (kCLAuthorizationStatusAuthorized == [CLLocationManager authorizationStatus]) 
+        [self stopUpdatingLocation:NSLocalizedString(@"Quit", @"Quit")];
+    
 }
 
 
@@ -438,6 +442,12 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+    // switch to on very first time
+    UIImage *locOnButtonImage = [[UIImage imageNamed:@"location_arrow_on"] stretchableImageWithLeftCapWidth:4 topCapHeight:0];
+    
+    if (kCLAuthorizationStatusAuthorized == [CLLocationManager authorizationStatus])
+        [self.locButton setImage:locOnButtonImage forState:UIControlStateNormal];
+    
     if (self.bestEffortAtLocation == nil || self.bestEffortAtLocation.horizontalAccuracy > newLocation.horizontalAccuracy) {
         self.bestEffortAtLocation = newLocation;
     }
@@ -461,8 +471,8 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
     self.locationManager.distanceFilter = kCLDistanceFilterNone;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
     [self.locationManager startUpdatingLocation];
-    
-    [self performSelector:@selector(stopUpdatingLocation:) withObject:@"Timed Out" afterDelay:20.0f];
+    NSLog(@"start updating");
+//    [self performSelector:@selector(stopUpdatingLocation:) withObject:@"Timed Out" afterDelay:20.0f];
 }
 
 - (void)stopUpdatingLocation:(NSString *)state {
@@ -471,14 +481,6 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
     self.locationManager.delegate = nil;
     NSLog(@"stop updating %@", state);
     
-//    if ([state isEqualToString:@"Timed Out"]) {
-//        if ([self.locButton isSelected])
-//            [self.locButton setSelected:NO];
-//        else
-//            [self.locButton setSelected:YES];
-//        [self toggleLocButtonImage:self.locButton];
-//        NSLog(@"in");
-//    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
@@ -806,7 +808,7 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
         else {
             [sender setImage:locOffButtonImage forState:UIControlStateSelected];
             [sender setSelected:YES];
-            [self stopUpdatingLocation:NSLocalizedString(@"ManuallyStop", @"ManuallyStop")];
+            [self stopUpdatingLocation:NSLocalizedString(@"Manually Stop", @"Manually Stop")];
             self.locationLabel.text = nil;
             self.latString = nil;
             self.lonString = nil;
@@ -823,7 +825,7 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
         }
         else {
             UIAlertView *servicesDisabledAlert = [[UIAlertView alloc] initWithTitle:@"Location Services Disabled"
-                                                                            message:[NSString stringWithFormat:@"Please turn on the location services in the settings to add current location"]
+                                                                            message:[NSString stringWithFormat:@"Please turn on the location services in the settings to add location."]
                                                                            delegate:nil
                                                                   cancelButtonTitle:@"OK"
                                                                   otherButtonTitles:nil];
