@@ -13,7 +13,8 @@ Pod::Spec.new do |s|
   s.description  = "A generic message entry view controller using the style of iOS compose view controllers (like tweet sheets). Based on the excellent tweet sheet based control DETweetComposeViewController from DoubleEncore."
   s.homepage     = "https://github.com/pj4533/DEComposeViewController"  
   s.author       = 'PJ Gray'
-  s.source       = { :git => "git://github.com/RobertoEstrada/DEComposeViewController.git", :tag => "1.0.0" }
+  s.license      = "BSD"
+  s.source       = { :git => "https://github.com/RobertoEstrada/DEComposeViewController.git", :tag => "1.0.0" }
   s.platform     = :ios
   s.source_files = '*.{h,m}'
   s.resources    = "*.xib", "Resources/*.png"
