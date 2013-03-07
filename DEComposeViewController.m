@@ -75,6 +75,7 @@
     // Public
 @synthesize completionHandler = _completionHandler;
 @synthesize alwaysUseDETwitterCredentials = _alwaysUseDETwitterCredentials;
+@synthesize useLocation = _useLocation;
 
     // Private
 @synthesize text = _text;
@@ -281,8 +282,12 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
     self.lonString = nil;
     
     // default to add current location
-    self.locationManager = [[CLLocationManager alloc] init];
-    [self startUpdatingLocation];
+    if (_useLocation) {
+        self.locationManager = [[CLLocationManager alloc] init];
+        [self startUpdatingLocation];
+    } else {
+        self.locButton.hidden = YES;
+    }
 }
 
 
@@ -466,7 +471,7 @@ static NSString * const DELastAccountIdentifier = @"DELastAccountIdentifier";
     self.lonString = [NSString stringWithFormat:@"%f", self.bestEffortAtLocation.coordinate.longitude];
 }
 
--(void)startUpdatingLocation {    
+-(void)startUpdatingLocation {
     self.locationManager.delegate = self;
     self.locationManager.distanceFilter = kCLDistanceFilterNone;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
